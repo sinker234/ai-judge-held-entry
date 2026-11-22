@@ -16,6 +16,13 @@ TEXT = (
 
 
 def main() -> None:
+    # Guard the sealed scorer's gate: 1-280 Unicode code points, not
+    # whitespace-only. Fail loudly instead of writing an invalid entry.
+    if not 1 <= len(TEXT) <= 280 or not TEXT.strip():
+        raise SystemExit(
+            f"entry text invalid: {len(TEXT)} chars, "
+            f"whitespace-only={not TEXT.strip()}"
+        )
     os.makedirs("/output", exist_ok=True)
     with open("/output/entry.txt", "w", encoding="utf-8") as f:
         f.write(TEXT)
